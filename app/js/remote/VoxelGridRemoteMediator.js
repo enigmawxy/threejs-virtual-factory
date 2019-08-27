@@ -4,7 +4,8 @@ export default class VoxelGridRemoteMediator {
     constructor(voxelGrid, remoteClient) {
         this.voxelGrid = voxelGrid;
         this.remoteClient = remoteClient;
-        this.remoteClient.addObserver("CommandReceived", (e) => this.onCommandReceived(e));
+        this.remoteClient.addObserver("CommandReceived",
+            (e) => VoxelGridRemoteMediator.onCommandReceived(e));
     }
 
     initialize() {
@@ -17,7 +18,7 @@ export default class VoxelGridRemoteMediator {
         this.remoteClient.runCommand(command);
     }
 
-    onCommandReceived(command) {
+    static onCommandReceived(command) {
         command.execute();
     }
 }

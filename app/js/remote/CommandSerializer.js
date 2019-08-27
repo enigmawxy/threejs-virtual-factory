@@ -22,7 +22,7 @@ class CommandSerializer {
             case 'MoveVoxelCommand':
                 return {
                     className: command.className,
-                    voxel: this.serializeVoxel(command.voxel),
+                    voxel: CommandSerializer.serializeVoxel(command.voxel),
                     x: command.x,
                     y: command.y,
                     z: command.z
@@ -30,7 +30,7 @@ class CommandSerializer {
             case 'RemoveVoxelCommand':
                 return {
                     className: command.className,
-                    voxel: this.serializeVoxel(command.voxel)
+                    voxel: CommandSerializer.serializeVoxel(command.voxel)
                 };
         }
     }
@@ -76,7 +76,7 @@ class CommandSerializer {
         return null;
     }
 
-    serializeVoxel(voxel) {
+    static serializeVoxel(voxel) {
         return {id: voxel.id};
     }
 

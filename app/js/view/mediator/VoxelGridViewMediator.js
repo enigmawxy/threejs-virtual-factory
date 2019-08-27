@@ -46,7 +46,7 @@ export default class VoxelGridViewMediator extends ViewMediator {
 
         this.object3D.add(mediator.object3D);
 
-        if (voxel.type != Voxel.Pointer) {
+        if (voxel.type !== Voxel.Pointer) {
             this.objects.push(mediator.object3D);
             mediator.object3D.cell = [voxel.x, voxel.y, voxel.z];
         }
@@ -69,7 +69,8 @@ export default class VoxelGridViewMediator extends ViewMediator {
         result[1] = Math.round((position.z - origin) / this.model.cellSize);
         result[2] = Math.round((position.y - this.model.cellSize / 2) / this.model.cellSize);
 
-        if (result[0] >=0 && result[1] >=0 && result[2] >=0 && result[0] < this.model.numCells && result[1] < this.model.numCells && result[2] < this.model.numCells) {
+        if (result[0] >=0 && result[1] >=0 && result[2] >=0 && result[0] < this.model.numCells &&
+            result[1] < this.model.numCells && result[2] < this.model.numCells) {
             return result;
         } else {
             return null;
@@ -93,18 +94,15 @@ export default class VoxelGridViewMediator extends ViewMediator {
         }
 
         const material = new THREE.LineBasicMaterial( { color: 0x000000, opacity: 0.2, transparent: true } );
-        const lines = new THREE.LineSegments( geometry, material );
 
-        return lines
+        return new THREE.LineSegments( geometry, material );
     }
 
     getGridPlane() {
         const geometry = new THREE.PlaneBufferGeometry(2000, 2000);
         geometry.rotateX(-Math.PI / 2);
 
-        const plane = new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({visible: false}));
-
-        return plane;
+        return new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({visible: false}));
     }
 
 }

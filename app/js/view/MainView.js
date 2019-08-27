@@ -7,12 +7,12 @@ export default class MainView {
     constructor(controller, voxelGrid) {
         this.controller = controller;
         this.voxelGrid = voxelGrid;
-        this.renderingContext = this.createRenderingContext();
+        this.renderingContext = MainView.createRenderingContext();
         this.voxelGridMediator = new VoxelGridViewMediator(voxelGrid);
         this.isShiftDown = false;
     }
 
-    createRenderingContext() {
+    static createRenderingContext() {
         const domContainer = document.createElement('div');
 
         document.body.appendChild(domContainer);
@@ -119,6 +119,7 @@ export default class MainView {
 
                 return this.voxelGridMediator.getGridCellFromWorldPosition(point);
             } else {
+
                 return intersects[0].object.cell;
             }
         } else {

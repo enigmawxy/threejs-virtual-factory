@@ -1,4 +1,4 @@
-.DS_Store
+rem.DS_Store
 dist/
 npm-debug.log
 node_modules/

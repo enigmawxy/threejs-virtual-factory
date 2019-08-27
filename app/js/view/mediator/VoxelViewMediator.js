@@ -8,20 +8,20 @@ export default class VoxelViewMediator extends ViewMediator {
 
     makeObject3D() {
         const geometry = new THREE.BoxGeometry( this.model.size, this.model.size, this.model.size );
-        const mesh = new THREE.Mesh(geometry, this.getMaterialForVoxel());
 
-        return mesh;
+        return new THREE.Mesh(geometry, this.getMaterialForVoxel());
     }
 
     getMaterialForVoxel() {
         if (this.model.type === Voxel.Pointer) {
             return new THREE.MeshBasicMaterial( { color: this.model.color, opacity: 0.5, transparent: true } );
         } else {
-            return new THREE.MeshPhongMaterial( { map: new THREE.TextureLoader().load( "images/" + this.getTextureForType(this.model.type)) } );
+            return new THREE.MeshPhongMaterial( { map: new THREE.TextureLoader().load( "images/" +
+                                                  VoxelViewMediator.getTextureForType(this.model.type)) } );
         }
     }
 
-    getTextureForType(type) {
+    static getTextureForType(type) {
         switch (type) {
             case Voxel.Brick:
                 return 'brick.jpg';
