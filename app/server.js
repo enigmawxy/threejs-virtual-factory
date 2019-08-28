@@ -54,10 +54,7 @@ wss.on('connection', function connection(ws) {
     // 如果其它客户端实例已经增加来很多实体，那么新客户端开启后会自动增加这些实体
     // 以保持同步
     getInitCommands(ws);
-    // for (const command of getInitCommands()) {
-    //     const serializedCommand = JSON.stringify(command);
-    //     ws.send(serializedCommand);
-    // }
+
 });
 
 function executeCommand(serializedCommand) {
@@ -65,24 +62,21 @@ function executeCommand(serializedCommand) {
 
     if (command) {
         const object = command.execute();
-
+        console.log(object.voxel);
         if (object.className === 'AddVoxelCommand' &&  object.voxel.type !== 0) {
-            console.log(object.voxel);
             dbOperation.gotoDB(object.voxel);
         }
 
         if (object.className === 'MoveVoxelCommand' &&  object.voxel.type !== 0) {
-            console.log(object.voxel);
             dbOperation.gotoDB(object.voxel);
         }
 
         if (object.className === 'RemoveVoxelCommand' &&  object.voxel.type !== 0) {
-            console.log(object.voxel);
             dbOperation.RemoveById(object.voxel.id);
         }
 
     } else {
-        console.error('invalid commmand', serializedCommand);
+        console.error('invalid command', serializedCommand);
     }
 }
 
