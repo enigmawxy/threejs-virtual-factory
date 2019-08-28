@@ -14,9 +14,10 @@ class AddVoxelCommand {
 
     execute() {
         const voxel = new Voxel(this.id, this.x, this.y, this.z, this.type, this.color);
-
+        this.voxel = voxel;
         this.voxelGrid.addVoxel(voxel);
-        return voxel;
+
+        return this;
     }
 }
 

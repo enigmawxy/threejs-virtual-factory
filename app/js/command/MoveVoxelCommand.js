@@ -12,6 +12,8 @@ class MoveVoxelCommand {
 
     execute() {
         this.voxelGrid.moveVoxel(this.voxel, this.x, this.y, this.z);
+
+        return this;
     }
 }
 

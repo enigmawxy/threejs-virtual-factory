@@ -20,7 +20,8 @@ export default class VoxelGridController {
         const voxelPointerCommand = new AddVoxelCommand(this.voxelGrid, generateUUID(), 0, 0, 0,
                                                         Voxel.Pointer, randomColor());
 
-        this.voxelGrid.voxelPointer = voxelPointerCommand.execute();
+        this.voxelGrid.voxelPointer = voxelPointerCommand.execute().voxel;
+        // this.voxelGrid.voxelPointer = voxelPointerCommand.execute();
         this.voxelGridRemoteMediator.onCommandExecuted(voxelPointerCommand);
     }
 

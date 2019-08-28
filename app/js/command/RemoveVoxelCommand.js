@@ -9,6 +9,8 @@ class RemoveVoxelCommand {
 
     execute() {
         this.voxelGrid.removeVoxel(this.voxel);
+
+        return this;
     }
 }
 

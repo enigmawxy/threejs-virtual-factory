@@ -1,6 +1,7 @@
 const VoxelGrid = require('./js/model/VoxelGrid');
 const CommandSerializer = require('./js/remote/CommandSerializer');
 const AddVoxelCommand = require('./js/command/AddVoxelCommand');
+const DbOperation = require('./js/db/index');
 
 // 所有命令都通过CommandSerializer来传递和执行，这个命令类包含一个
 // voxelGrid变量，这个变量记录类当前场景所有都实体，这个变量是服务端
@@ -8,6 +9,7 @@ const AddVoxelCommand = require('./js/command/AddVoxelCommand');
 // 已知的问题：没有重连机制。客户端刷新是否慧重新连接服务
 const voxelGrid = new VoxelGrid(50, 40);
 const commandSerializer = new CommandSerializer(voxelGrid);
+const dbOperation = new DbOperation({appId:'appid1', key:'mk1', url: 'http://127.0.0.1:1337/parse'});
 
 var WebSocketServer = require('ws').Server
     , wss = new WebSocketServer({port: 8081});
@@ -51,28 +53,54 @@ wss.on('connection', function connection(ws) {
     // 这是否是一个新的客户端实例连接成功后，初始化的时候发生的，
     // 如果其它客户端实例已经增加来很多实体，那么新客户端开启后会自动增加这些实体
     // 以保持同步
-    for (const command of getInitCommands()) {
-        const serializedCommand = JSON.stringify(command);
-        ws.send(serializedCommand);
-    }
+    getInitCommands(ws);
+    // for (const command of getInitCommands()) {
+    //     const serializedCommand = JSON.stringify(command);
+    //     ws.send(serializedCommand);
+    // }
 });
-
 
 function executeCommand(serializedCommand) {
     const command = commandSerializer.deserialize(serializedCommand);
 
     if (command) {
-        command.execute();
+        const object = command.execute();
+
+        if (object.className === 'AddVoxelCommand' &&  object.voxel.type !== 0) {
+            console.log(object.voxel);
+            dbOperation.gotoDB(object.voxel);
+        }
+
+        if (object.className === 'MoveVoxelCommand' &&  object.voxel.type !== 0) {
+            console.log(object.voxel);
+            dbOperation.gotoDB(object.voxel);
+        }
+
+        if (object.className === 'RemoveVoxelCommand' &&  object.voxel.type !== 0) {
+            console.log(object.voxel);
+            dbOperation.RemoveById(object.voxel.id);
+        }
+
     } else {
         console.error('invalid commmand', serializedCommand);
     }
 }
 
-function getInitCommands() {
-    const result = [];
-
+function getInitCommands(ws) {
     for (const voxel of voxelGrid.voxels.values()) {
-        result.push(new AddVoxelCommand(voxelGrid, voxel.id, voxel.x, voxel.y, voxel.z, voxel.type, voxel.color));
+        var command = new AddVoxelCommand(voxelGrid, voxel.id, voxel.x, voxel.y, voxel.z, voxel.type, voxel.color);
+        const serializedCommand = JSON.stringify(command);
+        ws.send(serializedCommand);
     }
-    return result;
+
+    // Read MongoDB if result is empty
+    dbOperation.RetrieveObjects((res)=> {
+        console.log(res);
+        for (let i = 0; i < res.length; i++) {
+            var command = new AddVoxelCommand(voxelGrid, res[i].get('uuid'),
+                res[i].get('x'), res[i].get('y'), res[i].get('z'), res[i].get('type'), '');
+            const serializedCommand = JSON.stringify(command);
+            ws.send(serializedCommand);
+        }
+    });
 }
