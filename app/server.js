@@ -22,8 +22,10 @@ wss.on('connection', function connection(ws) {
     var connectionId = nextId++;
     var terminationCommand = null;
     wss.clients[wss.clients.length - 1].connectionId = connectionId;
-
+    console.log('连接来临');
     ws.on('message', function incoming(message) {
+        console.log(message);
+        // if(message.command.className !=='MoveVoxelCommand') console.log(message);
         var payload = JSON.parse(message);
         var serializedCommand = JSON.stringify(payload.command);
 
@@ -35,6 +37,7 @@ wss.on('connection', function connection(ws) {
     });
 
     ws.on('close', function disconnect() {
+        console.log('close');
         if (terminationCommand) {
             broadcast(terminationCommand);
         }
@@ -62,7 +65,6 @@ function executeCommand(serializedCommand) {
 
     if (command) {
         const object = command.execute();
-        console.log(object.voxel);
         if (object.className === 'AddVoxelCommand' &&  object.voxel.type !== 0) {
             dbOperation.gotoDB(object.voxel);
         }
@@ -81,6 +83,7 @@ function executeCommand(serializedCommand) {
 }
 
 function getInitCommands(ws) {
+
     for (const voxel of voxelGrid.voxels.values()) {
         var command = new AddVoxelCommand(voxelGrid, voxel.id, voxel.x, voxel.y, voxel.z, voxel.type, voxel.color);
         const serializedCommand = JSON.stringify(command);
@@ -89,7 +92,7 @@ function getInitCommands(ws) {
 
     // Read MongoDB if result is empty
     dbOperation.RetrieveObjects((res)=> {
-        console.log(res);
+        // console.log(res);
         for (let i = 0; i < res.length; i++) {
             var command = new AddVoxelCommand(voxelGrid, res[i].get('uuid'),
                 res[i].get('x'), res[i].get('y'), res[i].get('z'), res[i].get('type'), '');
