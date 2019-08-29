@@ -6,7 +6,6 @@ const Voxel = require('../model/Voxel');
 export default class MainView {
     constructor(controller, voxelGrid) {
         this.controller = controller;
-        this.voxelGrid = voxelGrid;
         this.renderingContext = MainView.createRenderingContext();
         this.voxelGridMediator = new VoxelGridViewMediator(voxelGrid);
         this.isShiftDown = false;
@@ -45,7 +44,6 @@ export default class MainView {
         this.renderingContext.controls.update();
         requestAnimationFrame(() => this.render());
 
-        this.voxelGridMediator.onFrameRenderered();
         this.renderingContext.renderer.render(this.renderingContext.scene, this.renderingContext.camera);
     }
 

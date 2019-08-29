@@ -1,7 +1,7 @@
 import ViewMediator from './ViewMediator';
 import Voxel from '../../model/Voxel';
 
-// 定义创建 Voxel 实例的方法
+// 定义创建 Voxel 实例的方法,类似于C++里的多态
 // 在 VoxelGridViewMediator 中创建 VoxelViewMediator 实例。
 export default class VoxelViewMediator extends ViewMediator {
     constructor(voxel) {

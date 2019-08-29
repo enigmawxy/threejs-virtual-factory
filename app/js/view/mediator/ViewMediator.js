@@ -1,6 +1,6 @@
 import Observable from '../../Observable';
 
-// 定义基本到创建3D，移除/增加，渲染等一般方法
+// 定义基本到创建3D方法
 export default class ViewMediator extends Observable {
     constructor(model) {
         super();
@@ -13,29 +13,9 @@ export default class ViewMediator extends Observable {
         });
     }
 
+    //  缺省创建THREE.Object3D()，如果继承类覆盖类此方法，则创建继承类定义的内容
     makeObject3D() {
-        console.log('ViewMediator: makeObject3D called');
         return new THREE.Object3D();
-    }
-
-    addChild(child, mediator) {
-        this.childMediators.set(child, mediator);
-        this.object3D.add(mediator.object3D);
-    }
-
-    removeChild(child) {
-        const mediator = this.childMediators.get(child);
-
-        if (mediator) {
-            this.object3D.remove(mediator.object3D);
-            this.childMediators.delete(child);
-        }
-    }
-
-    onFrameRenderered() {
-        for (const childMediator of this.childMediators.values()) {
-            childMediator.onFrameRenderered();
-        }
     }
 }
 

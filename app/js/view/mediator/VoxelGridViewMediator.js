@@ -12,6 +12,7 @@ export default class VoxelGridViewMediator extends ViewMediator {
         const grid = this.getGridObject(voxelGrid);
 
         this.object3D.add(grid);
+        // called by MainView's computeCellMouseIntersection
         this.objects = [];
 
         this.plane = this.getGridPlane();
@@ -77,6 +78,7 @@ export default class VoxelGridViewMediator extends ViewMediator {
         }
     }
 
+    // 画网格函数
     getGridObject(voxelGrid) {
         const step = voxelGrid.cellSize;
         const size = step * voxelGrid.numCells / 2;
@@ -84,7 +86,6 @@ export default class VoxelGridViewMediator extends ViewMediator {
 
         console.log(size);
         for ( let i = - size; i <= size; i += step ) {
-            console.log('(x, 0,  z) : (' + size + ', 0, '+ i + ')');
             geometry.vertices.push( new THREE.Vector3( - size, 0, i ) );
             geometry.vertices.push( new THREE.Vector3(   size, 0, i ) );
 
