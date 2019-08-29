@@ -37,9 +37,9 @@ export default class VoxelGridViewMediator extends ViewMediator {
         const voxel = e.voxel;
 
         voxel.size = this.model.cellSize;
-        console.log('onVoxelAdded start');
+
         const mediator = new VoxelViewMediator(voxel);
-        console.log('onVoxelAdded end');
+
         this.childMediators.set(voxel, mediator);
 
         this.setVoxelPosition(voxel, mediator);
@@ -84,7 +84,7 @@ export default class VoxelGridViewMediator extends ViewMediator {
 
         console.log(size);
         for ( let i = - size; i <= size; i += step ) {
-
+            console.log('(x, 0,  z) : (' + size + ', 0, '+ i + ')');
             geometry.vertices.push( new THREE.Vector3( - size, 0, i ) );
             geometry.vertices.push( new THREE.Vector3(   size, 0, i ) );
 
@@ -98,11 +98,12 @@ export default class VoxelGridViewMediator extends ViewMediator {
         return new THREE.LineSegments( geometry, material );
     }
 
+    // 增加一个平面，目前没啥用。
     getGridPlane() {
         const geometry = new THREE.PlaneBufferGeometry(2000, 2000);
         geometry.rotateX(-Math.PI / 2);
 
-        return new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({visible: false}));
+        return new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color:'glass', visible: false}));
     }
 
 }
