@@ -1,5 +1,6 @@
 import Observable from '../../Observable';
 
+// 定义基本到创建3D，移除/增加，渲染等一般方法
 export default class ViewMediator extends Observable {
     constructor(model) {
         super();
@@ -13,6 +14,7 @@ export default class ViewMediator extends Observable {
     }
 
     makeObject3D() {
+        console.log('ViewMediator: makeObject3D called');
         return new THREE.Object3D();
     }
 

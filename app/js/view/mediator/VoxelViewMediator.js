@@ -1,12 +1,16 @@
 import ViewMediator from './ViewMediator';
 import Voxel from '../../model/Voxel';
 
+// 定义创建 Voxel 实例的方法
+// 在 VoxelGridViewMediator 中创建 VoxelViewMediator 实例。
 export default class VoxelViewMediator extends ViewMediator {
     constructor(voxel) {
         super(voxel);
     }
 
+    // makeObject3D 在super(voxel)里倍调用，而不会调用ViewMediator里的makeObject3D方法
     makeObject3D() {
+        console.log('be called!');
         const geometry = new THREE.BoxGeometry( this.model.size, this.model.size, this.model.size );
 
         return new THREE.Mesh(geometry, this.getMaterialForVoxel());

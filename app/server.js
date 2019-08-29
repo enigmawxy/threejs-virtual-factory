@@ -15,6 +15,7 @@ var WebSocketServer = require('ws').Server
     , wss = new WebSocketServer({port: 8081});
 
 var nextId = 0;
+var isFromDB = true;
 
 wss.on('connection', function connection(ws) {
     ws._socket.setKeepAlive(true);
@@ -22,11 +23,10 @@ wss.on('connection', function connection(ws) {
     var connectionId = nextId++;
     var terminationCommand = null;
     wss.clients[wss.clients.length - 1].connectionId = connectionId;
-    console.log('连接来临');
+    console.log('incoming connection');
     ws.on('message', function incoming(message) {
-        console.log(message);
-        // if(message.command.className !=='MoveVoxelCommand') console.log(message);
         var payload = JSON.parse(message);
+        if(payload.command.className !=='MoveVoxelCommand') console.log(payload);
         var serializedCommand = JSON.stringify(payload.command);
 
         if (payload.type === 'RUN') {
@@ -56,8 +56,15 @@ wss.on('connection', function connection(ws) {
     // 这是否是一个新的客户端实例连接成功后，初始化的时候发生的，
     // 如果其它客户端实例已经增加来很多实体，那么新客户端开启后会自动增加这些实体
     // 以保持同步
-    getInitCommands(ws);
-
+    if (isFromDB) {
+        console.log('from db');
+        SyncWithDB(ws);
+        isFromDB = false;
+    }
+    else {
+        console.log('from memory');
+        getInitCommands(ws);
+    }
 });
 
 function executeCommand(serializedCommand) {
@@ -82,22 +89,30 @@ function executeCommand(serializedCommand) {
     }
 }
 
+function SyncWithDB(ws) {
+    // Read MongoDB if result is empty
+    dbOperation.RetrieveObjects((res)=> {
+        let count1 = 0;
+        for (let i = 0; i < res.length; i++) {
+            var command = new AddVoxelCommand(voxelGrid, res[i].get('uuid'),
+                res[i].get('x'), res[i].get('y'), res[i].get('z'), res[i].get('type'), '');
+            command.execute();
+            const serializedCommand = JSON.stringify(command);
+            count1++;
+            ws.send(serializedCommand);
+        }
+        console.log('RetrieveObjects:' + count1);
+    });
+}
+
 function getInitCommands(ws) {
+    var count = 0;
 
     for (const voxel of voxelGrid.voxels.values()) {
         var command = new AddVoxelCommand(voxelGrid, voxel.id, voxel.x, voxel.y, voxel.z, voxel.type, voxel.color);
         const serializedCommand = JSON.stringify(command);
+        count++;
         ws.send(serializedCommand);
     }
-
-    // Read MongoDB if result is empty
-    dbOperation.RetrieveObjects((res)=> {
-        // console.log(res);
-        for (let i = 0; i < res.length; i++) {
-            var command = new AddVoxelCommand(voxelGrid, res[i].get('uuid'),
-                res[i].get('x'), res[i].get('y'), res[i].get('z'), res[i].get('type'), '');
-            const serializedCommand = JSON.stringify(command);
-            ws.send(serializedCommand);
-        }
-    });
+    console.log('VoxelGrid: ' + count);
 }

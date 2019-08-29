@@ -37,9 +37,9 @@ export default class VoxelGridViewMediator extends ViewMediator {
         const voxel = e.voxel;
 
         voxel.size = this.model.cellSize;
-
+        console.log('onVoxelAdded start');
         const mediator = new VoxelViewMediator(voxel);
-
+        console.log('onVoxelAdded end');
         this.childMediators.set(voxel, mediator);
 
         this.setVoxelPosition(voxel, mediator);
