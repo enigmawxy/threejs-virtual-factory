@@ -27,6 +27,7 @@ export default class MainView {
 
         scene.add(object3D);
 
+        // 设定光线追踪，以便计算鼠标点击处选择的物体
         this.raycaster = new THREE.Raycaster();
         this.mouse = new THREE.Vector2();
         this.mouseMoved = false;
@@ -109,15 +110,14 @@ export default class MainView {
 
         this.mouse.set(( event.clientX / window.innerWidth ) * 2 - 1, -( event.clientY / window.innerHeight ) * 2 + 1);
         this.raycaster.setFromCamera(this.mouse, this.renderingContext.camera);
+        // 判断与场景中的物体相交的情况
         const intersects = this.raycaster.intersectObjects(this.voxelGridMediator.objects);
 
         if (intersects.length > 0) {
             if (!this.isShiftDown || !intersects[0].object.cell) {
                 const point = intersects[0].point.add(intersects[0].face.normal);
-
                 return this.voxelGridMediator.getGridCellFromWorldPosition(point);
             } else {
-
                 return intersects[0].object.cell;
             }
         } else {

@@ -44,7 +44,6 @@ export default class VoxelGridController {
     }
 
     executeCommand(command) {
-        console.log(command);
         // 加入 voxelGrid 中管理
         command.execute(command);
         // 发送消息到 WS
