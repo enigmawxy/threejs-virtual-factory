@@ -1,6 +1,7 @@
 import ViewMediator from './ViewMediator';
 import VoxelViewMediator from './VoxelViewMediator';
 import FloorViewMediator from './FloorViewMediator';
+import WallViewMediator from './WallViewMediator';
 import Voxel from '../../model/Voxel';
 
 export default class VoxelGridViewMediator extends ViewMediator {
@@ -58,6 +59,9 @@ export default class VoxelGridViewMediator extends ViewMediator {
         var obj = null;
 
         switch (voxel.type) {
+            case Voxel.Wall:
+                obj = new WallViewMediator(voxel);
+                break;
             case Voxel.Floor:
                 obj = new FloorViewMediator(voxel);
                 break;

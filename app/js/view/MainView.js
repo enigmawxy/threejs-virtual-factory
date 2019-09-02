@@ -57,7 +57,7 @@ export default class MainView {
 
     initGUI() {
         const types = {'brick': Voxel.Brick, 'grass': Voxel.Grass, 'crate': Voxel.Crate,
-            'water': Voxel.Water, 'stone': Voxel.Stone, 'floor': Voxel.Floor};
+            'water': Voxel.Water, 'stone': Voxel.Stone, 'floor': Voxel.Floor, 'wall': Voxel.Wall};
 
         this.uiSettings = {
             type: Voxel.Stone
