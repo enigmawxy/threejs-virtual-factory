@@ -1,5 +1,6 @@
 import ViewMediator from './ViewMediator';
 import VoxelViewMediator from './VoxelViewMediator';
+import FloorViewMediator from './FloorViewMediator';
 import Voxel from '../../model/Voxel';
 
 export default class VoxelGridViewMediator extends ViewMediator {
@@ -39,7 +40,7 @@ export default class VoxelGridViewMediator extends ViewMediator {
 
         voxel.size = this.model.cellSize;
 
-        const mediator = new VoxelViewMediator(voxel);
+        const mediator = this.createObjectByType(voxel).obj;
 
         this.childMediators.set(voxel, mediator);
 
@@ -51,6 +52,22 @@ export default class VoxelGridViewMediator extends ViewMediator {
             this.objects.push(mediator.object3D);
             mediator.object3D.cell = [voxel.x, voxel.y, voxel.z];
         }
+    }
+
+    createObjectByType(voxel) {
+        var obj = null;
+
+        switch (voxel.type) {
+            case Voxel.Floor:
+                obj = new FloorViewMediator(voxel);
+                break;
+
+            default:
+                obj = new VoxelViewMediator(voxel) ;
+                break;
+        }
+
+        return {obj: obj};
     }
 
     setVoxelPosition(voxel, mediator) {
@@ -101,7 +118,7 @@ export default class VoxelGridViewMediator extends ViewMediator {
 
     // 增加一个平面，目前没啥用。
     getGridPlane() {
-        const geometry = new THREE.PlaneBufferGeometry(2000, 2000);
+        const geometry = new THREE.PlaneBufferGeometry(1000, 1000);
         geometry.rotateX(-Math.PI / 2);
 
         return new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color:'glass', visible: false}));

@@ -16,5 +16,6 @@ Voxel.Water = 2;
 Voxel.Stone = 3;
 Voxel.Brick = 4;
 Voxel.Grass = 5;
+Voxel.Floor = 6;
 
 module.exports = Voxel;
