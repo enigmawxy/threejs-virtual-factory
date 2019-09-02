@@ -21,6 +21,10 @@ export default class VoxelGridViewMediator extends ViewMediator {
 
         this.object3D.add(this.plane);
         this.objects.push(this.plane);
+
+        const axesHelper = new THREE.AxisHelper( 1000 );
+        axesHelper.position.set( 0, 0, 0 );
+        this.object3D.add(axesHelper);
     }
 
     onVoxelMoved(e) {
