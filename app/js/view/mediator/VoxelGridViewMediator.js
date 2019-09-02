@@ -122,7 +122,7 @@ export default class VoxelGridViewMediator extends ViewMediator {
 
     // 增加一个平面，目前没啥用。
     getGridPlane() {
-        const geometry = new THREE.PlaneBufferGeometry(1000, 1000);
+        const geometry = new THREE.PlaneBufferGeometry(2000, 2000);
         geometry.rotateX(-Math.PI / 2);
 
         return new THREE.Mesh(geometry, new THREE.MeshBasicMaterial({color:'glass', visible: false}));
